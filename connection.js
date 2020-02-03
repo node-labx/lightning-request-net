@@ -77,6 +77,12 @@ class Connection {
           } else if (transferEncodingIndex > -1) {
             this.chunked = true;
             this.data = chunk.replace(/\r\n\r\n.*\r\n/, '\r\n\r\n');
+            const idx = this.data.indexOf('0\r\n\r\n');
+            if (idx > -1) {
+              this.data = this.data.slice(0, idx - 2);
+              this.successCall(this.data);
+              this.release();
+            }
           }
         } else {
           if (this.chunked) {

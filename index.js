@@ -14,7 +14,7 @@ class HttpRequestClient {
       },
     };
     this.pool = new Pool(factory, {
-      min: 0,
+      min: 100,
     });
   }
 
