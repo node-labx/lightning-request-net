@@ -1,0 +1,24 @@
+{
+  "name": "lightning-request-net",
+  "version": "0.0.0",
+  "description": "Lightweight Node.js HTTP client based on net.",
+  "main": "index.js",
+  "scripts": {
+    "release": "sh release.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:node-labx/lightning-request-net.git"
+  },
+  "keywords": [],
+  "author": "kk",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/node-labx/lightning-request-net/issues"
+  },
+  "homepage": "https://github.com/node-labx/lightning-request-net",
+  "dependencies": {
+    "debug": "4.1.1",
+    "generic-pool": "3.7.1"
+  }
+}
