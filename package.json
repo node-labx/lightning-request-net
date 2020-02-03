@@ -18,7 +18,6 @@
   },
   "homepage": "https://github.com/node-labx/lightning-request-net",
   "dependencies": {
-    "debug": "4.1.1",
-    "generic-pool": "3.7.1"
+    "debug": "4.1.1"
   }
 }

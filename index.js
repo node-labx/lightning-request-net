@@ -1,5 +1,6 @@
 const Connection = require('./connection');
 const httpParser = require('./http_parser');
+const Pool = require('./pool');
 
 const userAgent = 'LightningHttpClient/0.0.1';
 
@@ -7,7 +8,14 @@ class HttpRequestClient {
   constructor(options) {
     this.options = options;
 
-    this.conn = new Connection(this.options);
+    const factory = {
+      create: () => {
+        return new Connection(this.options);
+      },
+    };
+    this.pool = new Pool(factory, {
+      min: 0,
+    });
   }
 
   get defaultHeaders() {
@@ -21,7 +29,6 @@ class HttpRequestClient {
   }
 
   async request(options) {
-    const _this = this;
     const method = (options.method || 'GET').toUpperCase();
     const path = options.path || '/';
     const headers = Object.assign({}, this.defaultHeaders, options.headers || {});
@@ -35,17 +42,20 @@ class HttpRequestClient {
     });
 
     return new Promise((resolve, reject) => {
-      this.conn.write(
+      const conn = this.pool.acquire();
+      conn.write(
         data,
-        function(resp) {
+        resp => {
           let result = httpParser.decode(resp);
           if (result.statusCode === 200 && responseType === 'json') {
             result.data = JSON.parse(result.data);
           }
           resolve(result);
+          this.pool.release(conn);
         },
-        function(error) {
+        error => {
           reject(error);
+          this.pool.release(conn);
         }
       );
     });

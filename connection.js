@@ -8,7 +8,6 @@ class Connection {
   get defaultOptions() {
     return {
       keepAlive: true,
-      timeout: 3000,
     };
   }
 
