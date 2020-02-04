@@ -37,6 +37,7 @@ class HttpRequestClient {
     const path = options.path || '/';
     const headers = Object.assign({}, this.defaultHeaders, options.headers || {});
     const responseType = options.responseType || 'text';
+    const timeout = options.timeout || 3000;
 
     const data = httpParser.encode({
       method,
@@ -47,17 +48,32 @@ class HttpRequestClient {
 
     return new Promise((resolve, reject) => {
       const conn = this.pool.acquire();
+      let flag = false;
+      const handler = setTimeout(() => {
+        flag = true;
+        reject(new Error('request timeout'));
+        this.pool.release(conn);
+      }, timeout);
+
       conn.write(
         data,
         resp => {
+          if (flag) {
+            return;
+          }
           let result = httpParser.decode(resp);
           if (result.statusCode === 200 && responseType === 'json') {
             result.data = JSON.parse(result.data);
           }
+          clearTimeout(handler);
           resolve(result);
           this.pool.release(conn);
         },
         error => {
+          if (flag) {
+            return;
+          }
+          clearTimeout(handler);
           reject(error);
           this.pool.release(conn);
         }
