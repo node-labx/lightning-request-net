@@ -68,7 +68,7 @@ class Connection {
             this.data = chunk;
             this.contentLength = parseInt(chunk.slice(contentLengthIndex + 16, contentLengthIndex + 26).toString());
             const idx = chunk.indexOf('\r\n\r\n');
-            this.bodySize += Buffer.byteLength(chunk.length) - idx - 4;
+            this.bodySize += Buffer.byteLength(chunk) - idx - 4;
 
             if (this.bodySize >= this.contentLength) {
               this.successCall(this.data);
@@ -96,7 +96,7 @@ class Connection {
             }
           } else {
             this.data += chunk;
-            this.bodySize += Buffer.byteLength(chunk.length);
+            this.bodySize += Buffer.byteLength(chunk);
             if (this.bodySize >= this.contentLength) {
               this.successCall(this.data);
               this.release();
