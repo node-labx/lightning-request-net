@@ -6,16 +6,20 @@ const userAgent = 'LightningHttpClient/0.0.1';
 
 class HttpRequestClient {
   constructor(options) {
-    this.options = options;
+    this.options = options || {};
+    this.options.poolOptions = Object.assign(
+      {
+        min: 100,
+      },
+      this.options.poolOptions || {}
+    );
 
     const factory = {
       create: () => {
         return new Connection(this.options);
       },
     };
-    this.pool = new Pool(factory, {
-      min: 100,
-    });
+    this.pool = new Pool(factory, this.options.poolOptions);
   }
 
   get defaultHeaders() {
