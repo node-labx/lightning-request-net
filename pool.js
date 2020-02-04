@@ -1,7 +1,7 @@
 class Pool {
   get defaultOptions() {
     return {
-      min: 1,
+      min: 100,
     };
   }
 
@@ -21,9 +21,9 @@ class Pool {
 
   acquire() {
     if (this.resources.length === 0) {
-      this.resources.push(this.factory.create());
+      return this.factory.create();
     }
-    return this.resources.shift();
+    return this.resources.pop();
   }
 
   release(resource) {
