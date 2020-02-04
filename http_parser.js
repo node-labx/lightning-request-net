@@ -1,5 +1,12 @@
 module.exports = {
   encode: function(options) {
+    options.headers = options.headers || {};
+    const chunkedEncoding = options.headers['Transfer-Encoding'] === 'chunked';
+    const body = options.data ? JSON.stringify(options.data) : '';
+    const bodyLength = Buffer.byteLength(body);
+    if (!chunkedEncoding) {
+      options.headers['Content-Length'] = bodyLength;
+    }
     let data = `${options.method} ${options.path} HTTP/1.1
 ${Object.entries(options.headers)
   .map(([k, v]) => `${k}: ${v}`)
@@ -7,12 +14,16 @@ ${Object.entries(options.headers)
 
     data += '\r\n\r\n';
     if (['POST', 'PUT', 'DELETE'].indexOf(options.method) > -1) {
-      if (options.data) {
-        const body = JSON.stringify(options.data);
-        data += `${body.length.toString(16)}\r\n${body}\r\n`;
+      if (body) {
+        if (chunkedEncoding) {
+          data += `${bodyLength.toString(16)}\r\n`;
+        }
+        data += `${body}\r\n`;
+      }
+      if (chunkedEncoding) {
+        data += '0\r\n\r\n';
       }
     }
-    data += '0\r\n\r\n';
     return data;
   },
 
