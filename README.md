@@ -43,11 +43,11 @@ These are the available config options for making requests. Only the path is req
 
 ```
 {
-  // `path` is the server URL that will be used for the request
-  path: '/foo',
-
   // `method` is the request method to be used when making the request
   method: 'get', // default
+
+  // `path` is the server URL that will be used for the request
+  path: '/foo',
 
   // `headers` are custom headers to be sent
   headers: {'Content-Type': 'application/json'},
@@ -56,6 +56,10 @@ These are the available config options for making requests. Only the path is req
   data: {
     foo: 'bar'
   },
+
+  // `timeout` specifies the number of milliseconds before the request times out.
+  // If the request takes longer than `timeout`, the request will be aborted.
+  timeout: 3000, // default is `3000` milliseconds
 
   // `responseType` indicates the type of data that the server will respond with
   // options are: 'json', 'text'
