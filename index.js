@@ -52,7 +52,6 @@ class HttpRequestClient {
       const handler = setTimeout(() => {
         flag = true;
         reject(new Error('request timeout'));
-        this.pool.release(conn);
       }, timeout);
 
       conn.write(
