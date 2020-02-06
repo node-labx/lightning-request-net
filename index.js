@@ -36,7 +36,7 @@ class HttpRequestClient {
     const method = (options.method || 'GET').toUpperCase();
     const path = options.path || '/';
     const headers = Object.assign({}, this.defaultHeaders, options.headers || {});
-    const responseType = options.responseType || 'text';
+    const responseType = options.responseType || 'json';
     const timeout = options.timeout || 3000;
 
     const data = httpParser.encode({

@@ -63,7 +63,7 @@ These are the available config options for making requests. Only the path is req
 
   // `responseType` indicates the type of data that the server will respond with
   // options are: 'json', 'text'
-  responseType: 'text', // default
+  responseType: 'json', // default
 }
 ```
 
