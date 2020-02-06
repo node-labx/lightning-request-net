@@ -1,6 +1,6 @@
 {
   "name": "lightning-request-net",
-  "version": "0.0.1-beta.4",
+  "version": "0.0.1-beta.5",
   "description": "Lightweight Node.js HTTP client based on net.",
   "main": "index.js",
   "scripts": {
