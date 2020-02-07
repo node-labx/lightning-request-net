@@ -1,0 +1,7 @@
+/coverage
+/docs
+/static
+/client/node_modules
+/node_modules
+/test
+.nyc_output
