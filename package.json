@@ -2,12 +2,13 @@
   "name": "lightning-request-net",
   "version": "0.0.1",
   "description": "Lightweight Node.js HTTP client based on net.",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "release": "sh release.sh",
     "test": "nyc ava",
     "test:watch": "nyc ava --watch",
-    "test:report": "nyc report --reporter=html"
+    "test:report": "nyc report --reporter=html",
+    "test:report:open": "npm run test:report && open coverage/index.html"
   },
   "ava": {
     "verbose": true,
