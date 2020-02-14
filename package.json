@@ -4,7 +4,17 @@
   "description": "Lightweight Node.js HTTP client based on net.",
   "main": "index.js",
   "scripts": {
-    "release": "sh release.sh"
+    "release": "sh release.sh",
+    "test": "nyc ava",
+    "test:watch": "nyc ava --watch",
+    "test:report": "nyc report --reporter=html"
+  },
+  "ava": {
+    "verbose": true,
+    "no-cache": true,
+    "include": [
+      "lib/**/*.js"
+    ]
   },
   "repository": {
     "type": "git",
@@ -19,5 +29,9 @@
   "homepage": "https://github.com/node-labx/lightning-request-net",
   "dependencies": {
     "debug": "4.1.1"
+  },
+  "devDependencies": {
+    "ava": "3.3.0",
+    "nyc": "15.0.0"
   }
 }
