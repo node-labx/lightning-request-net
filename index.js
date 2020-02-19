@@ -7,12 +7,7 @@ const userAgent = 'LightningHttpClient/0.0.1';
 class HttpRequestClient {
   constructor(options) {
     this.options = options || {};
-    this.options.poolOptions = Object.assign(
-      {
-        min: 100,
-      },
-      this.options.poolOptions || {}
-    );
+    this.options.poolOptions = Object.assign({}, this.options.poolOptions || {});
 
     const factory = {
       create: () => {
