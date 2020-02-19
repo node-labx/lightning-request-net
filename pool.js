@@ -1,7 +1,7 @@
 class Pool {
   get defaultOptions() {
     return {
-      min: 100,
+      initialValue: 10,
     };
   }
 
@@ -13,8 +13,8 @@ class Pool {
   }
 
   init() {
-    const min = this.options.min;
-    for (let i = 0; i < min; i++) {
+    const initialValue = this.options.initialValue;
+    for (let i = 0; i < initialValue; i++) {
       this.resources.push(this.factory.create());
     }
   }
@@ -23,7 +23,13 @@ class Pool {
     if (this.resources.length === 0) {
       return this.factory.create();
     }
-    return this.resources.pop();
+    const conn = this.resources.pop();
+    // 判断该连接是否已销毁，如果已销毁，则重新申请，直到申请到一个未销毁的连接
+    if (!conn.destroyed) {
+      return conn;
+    } else {
+      return this.acquire();
+    }
   }
 
   release(resource) {
