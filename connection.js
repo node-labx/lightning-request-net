@@ -8,7 +8,12 @@ class Connection {
   get defaultOptions() {
     return {
       keepAlive: true,
+      timeout: 60 * 1000,
     };
+  }
+
+  get destroyed() {
+    return this.socket.destroyed;
   }
 
   constructor(options = {}) {
@@ -32,6 +37,7 @@ class Connection {
 
   connect() {
     this.socket = new net.Socket();
+    this.socket.setTimeout(this.options.timeout);
     this.socket.setKeepAlive(this.options.keepAlive);
     this.socket.connect(this.options.port, this.options.host);
     this.socket.setEncoding('utf8');
@@ -108,6 +114,7 @@ class Connection {
         // Emitted if the socket times out from inactivity. This is only to notify that the socket has been idle.
         // The user must manually close the connection.
         debug('socket event -> timeout');
+        this.socket.end();
       })
       .on('drain', () => {
         // Emitted when the write buffer becomes empty. Can be used to throttle uploads.
@@ -131,9 +138,6 @@ class Connection {
         if (!this.socket.destroyed) {
           this.socket.destroy();
         }
-        setTimeout(() => {
-          this.socket.connect(this.options.port, this.options.host);
-        }, 3000);
       });
   }
 
