@@ -2,7 +2,7 @@ const Connection = require('./connection');
 const httpParser = require('./http_parser');
 const Pool = require('./pool');
 
-const userAgent = 'LightningHttpClient/0.0.1';
+const userAgent = 'lrn/0.0.2';
 
 class HttpRequestClient {
   constructor(options) {
@@ -49,7 +49,7 @@ class HttpRequestClient {
         reject(new Error('request timeout'));
       }, timeout);
 
-      conn.write(
+      conn.send(
         data,
         resp => {
           if (flag) {

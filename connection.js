@@ -152,7 +152,7 @@ class Connection {
     this.dataCount = 0;
   }
 
-  write(data, successCall, failCall) {
+  send(data, successCall, failCall) {
     this.successCall = successCall;
     this.failCall = failCall;
     debug('socket ready status check');
