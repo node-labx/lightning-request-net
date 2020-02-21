@@ -8,7 +8,7 @@ class Connection {
   get defaultOptions() {
     return {
       keepAlive: true,
-      timeout: 60 * 1000,
+      idleTimeout: 60 * 1000,
     };
   }
 
@@ -37,7 +37,7 @@ class Connection {
 
   connect() {
     this.socket = new net.Socket();
-    this.socket.setTimeout(this.options.timeout);
+    this.socket.setTimeout(this.options.idleTimeout);
     this.socket.setKeepAlive(this.options.keepAlive);
     this.socket.connect(this.options.port, this.options.host);
     this.socket.setEncoding('utf8');
