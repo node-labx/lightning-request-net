@@ -56,7 +56,7 @@ class Connection {
         debug('socket event -> ready');
         this.ready = true;
         if (this.writeCacheData) {
-          this.socket.write(this.writeCacheData);
+          this.write(this.writeCacheData);
           this.writeCacheData = null;
         }
       })
@@ -157,11 +157,20 @@ class Connection {
     this.failCall = failCall;
     debug('socket ready status check');
     if (this.ready) {
-      debug('socket start send');
-      this.socket.write(data);
+      this.write(data);
     } else {
       debug('data temporary cache');
       this.writeCacheData = data;
+    }
+  }
+
+  write(data) {
+    debug('socket start send');
+    const result = this.socket.write(data, 'utf8', function(err) {
+      debug('socket data is finally written out');
+    });
+    debug('socket write call result:', result);
+    if (!result) {
     }
   }
 }
