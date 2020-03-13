@@ -1,5 +1,6 @@
 const CRLF = '\r\n';
 const CRLF_2 = '\r\n\r\n';
+const RESPONSE_LINE_REG = /^HTTP\/(\d)\.(\d) (\d{3}) ?(.*)$/;
 
 module.exports = {
   encode: function(options) {
@@ -31,20 +32,20 @@ module.exports = {
   },
 
   decode: function(data) {
-    const idx = data.indexOf('\r\n');
-    const idx2 = data.indexOf('\r\n\r\n');
+    const idx = data.indexOf(CRLF);
+    const idx2 = data.indexOf(CRLF_2);
     const responseLineText = data.slice(0, idx);
     const responseHeadersText = data.slice(idx + 2, idx2);
     const responseBodyText = data.slice(idx2 + 4);
 
     // response line parse
-    const responseLineMatch = /^HTTP\/(\d)\.(\d) (\d{3}) ?(.*)$/.exec(responseLineText);
+    const responseLineMatch = RESPONSE_LINE_REG.exec(responseLineText);
     const statusCode = +responseLineMatch[3];
     const statusMessage = responseLineMatch[4];
 
     // response header parse
     let headers = {};
-    responseHeadersText.split('\r\n').forEach(item => {
+    responseHeadersText.split(CRLF).forEach(item => {
       const index = item.indexOf(': ');
       headers[item.slice(0, index)] = item.slice(index + 2);
     });
