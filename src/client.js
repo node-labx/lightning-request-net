@@ -39,7 +39,7 @@ class HttpRequestClient {
       method,
       path,
       headers,
-      data: options.data,
+      data: options.data ? JSON.stringify(options.data) : '',
     });
 
     return new Promise((resolve, reject) => {
