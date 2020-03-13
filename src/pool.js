@@ -7,7 +7,7 @@ class Pool {
 
   constructor(factory, options = {}) {
     this.factory = factory;
-    this.options = Object.assign(this.defaultOptions, options);
+    this.options = Object.assign({}, this.defaultOptions, options);
     this.resources = [];
     this.init();
   }
