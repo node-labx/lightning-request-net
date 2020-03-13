@@ -4,7 +4,15 @@
   "description": "Lightweight Node.js HTTP client based on net.",
   "main": "index.js",
   "scripts": {
+    "test": "nyc ava --verbose --no-cache --timeout=1m",
+    "test:watch": "nyc ava --verbose --watch --no-cache --timeout=1m",
+    "report": "nyc report --reporter=html && open coverage/index.html",
     "release": "sh release.sh"
+  },
+  "ava": {
+    "files": [
+      "test/**/*.js"
+    ]
   },
   "repository": {
     "type": "git",
@@ -20,5 +28,9 @@
   "dependencies": {
     "debug": "4.1.1",
     "zan-json-parse": "1.0.2"
+  },
+  "devDependencies": {
+    "ava": "^3.5.0",
+    "nyc": "^15.0.0"
   }
 }
