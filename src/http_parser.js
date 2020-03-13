@@ -1,27 +1,30 @@
+const CRLF = '\r\n';
+const CRLF_2 = '\r\n\r\n';
+
 module.exports = {
   encode: function(options) {
     options.headers = options.headers || {};
     const chunkedEncoding = options.headers['Transfer-Encoding'] === 'chunked';
-    const body = options.data ? JSON.stringify(options.data) : '';
+    const body = options.data;
     const bodyLength = Buffer.byteLength(body);
     if (!chunkedEncoding) {
       options.headers['Content-Length'] = bodyLength;
     }
-    let data = `${options.method} ${options.path} HTTP/1.1
-${Object.entries(options.headers)
-  .map(([k, v]) => `${k}: ${v}`)
-  .join('\r\n')}`;
+    let data = `${options.method} ${options.path} HTTP/1.1${CRLF}`;
+    Object.keys(options.headers).forEach(key => {
+      data += `${key}: ${options.headers[key]}${CRLF}`;
+    });
+    data += CRLF;
 
-    data += '\r\n\r\n';
     if (['POST', 'PUT', 'DELETE'].indexOf(options.method) > -1) {
       if (body) {
         if (chunkedEncoding) {
-          data += `${bodyLength.toString(16)}\r\n`;
+          data += `${bodyLength.toString(16)}${CRLF}`;
         }
-        data += `${body}\r\n`;
+        data += `${body}${CRLF}`;
       }
       if (chunkedEncoding) {
-        data += '0\r\n\r\n';
+        data += `0${CRLF_2}`;
       }
     }
     return data;
