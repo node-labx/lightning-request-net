@@ -2,13 +2,15 @@ const net = require('net');
 const Debug = require('debug');
 const debug = Debug('conn:');
 
+const defaultIdelTimeout = 3 * 60 * 1000 - 5 * 1000;
+
 function loop() {}
 
 class Connection {
   get defaultOptions() {
     return {
       keepAlive: true,
-      idleTimeout: 60 * 1000,
+      idleTimeout: defaultIdelTimeout,
     };
   }
 
@@ -17,7 +19,7 @@ class Connection {
   }
 
   constructor(options = {}) {
-    this.options = Object.assign(this.defaultOptions, options);
+    this.options = Object.assign({}, this.defaultOptions, options);
     this.socket = null;
     this.ready = false;
     this.writeCacheData = null;
