@@ -1,3 +1,4 @@
+const jsonParse = require('zan-json-parse').default;
 const Connection = require('./connection');
 const httpParser = require('./http_parser');
 const Pool = require('./pool');
@@ -58,7 +59,11 @@ class HttpRequestClient {
           }
           let result = httpParser.decode(resp);
           if (result.statusCode === 200 && responseType === 'json') {
-            result.data = JSON.parse(result.data);
+            if (options.allowBigNumberInJSON) {
+              result.data = jsonParse(result.data);
+            } else {
+              result.data = JSON.parse(result.data);
+            }
           }
           clearTimeout(handler);
           resolve(result);
