@@ -1,8 +1,9 @@
 const Connection = require('./connection');
 const httpParser = require('./http_parser');
 const Pool = require('./pool');
+const pkg = require('../package.json');
 
-const userAgent = 'lrn/0.0.2';
+const userAgent = `lrn/${pkg.version}`;
 
 class HttpRequestClient {
   constructor(options) {
