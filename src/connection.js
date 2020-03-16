@@ -1,6 +1,7 @@
 const net = require('net');
-const Debug = require('debug');
-const debug = Debug('conn:');
+const debug = require('debug')('conn:');
+
+const defaultIdelTimeout = 3 * 60 * 1000 - 5 * 1000;
 
 function loop() {}
 
@@ -8,7 +9,7 @@ class Connection {
   get defaultOptions() {
     return {
       keepAlive: true,
-      timeout: 60 * 1000,
+      idleTimeout: defaultIdelTimeout,
     };
   }
 
@@ -17,7 +18,7 @@ class Connection {
   }
 
   constructor(options = {}) {
-    this.options = Object.assign(this.defaultOptions, options);
+    this.options = Object.assign({}, this.defaultOptions, options);
     this.socket = null;
     this.ready = false;
     this.writeCacheData = null;
@@ -37,7 +38,7 @@ class Connection {
 
   connect() {
     this.socket = new net.Socket();
-    this.socket.setTimeout(this.options.timeout);
+    this.socket.setTimeout(this.options.idleTimeout);
     this.socket.setKeepAlive(this.options.keepAlive);
     this.socket.connect(this.options.port, this.options.host);
     this.socket.setEncoding('utf8');
@@ -56,7 +57,7 @@ class Connection {
         debug('socket event -> ready');
         this.ready = true;
         if (this.writeCacheData) {
-          this.socket.write(this.writeCacheData);
+          this.write(this.writeCacheData);
           this.writeCacheData = null;
         }
       })
@@ -152,16 +153,25 @@ class Connection {
     this.dataCount = 0;
   }
 
-  write(data, successCall, failCall) {
+  send(data, successCall, failCall) {
     this.successCall = successCall;
     this.failCall = failCall;
     debug('socket ready status check');
     if (this.ready) {
-      debug('socket start send');
-      this.socket.write(data);
+      this.write(data);
     } else {
       debug('data temporary cache');
       this.writeCacheData = data;
+    }
+  }
+
+  write(data) {
+    debug('socket start send');
+    const result = this.socket.write(data, 'utf8', function(err) {
+      debug('socket data is finally written out');
+    });
+    debug('socket write call result:', result);
+    if (!result) {
     }
   }
 }

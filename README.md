@@ -12,17 +12,17 @@ npm i lightning-request-net --save
 
 First, require the library.
 
-```
+```js
 const HttpRequestClient = require('lightning-request-net');
 const client = new HttpRequestClient({
   host: 'www.example.com',
-  port: 8680,
+  port: 80,
 });
 ```
 
 Then let's make a request in an async function.
 
-```
+```js
 (async function() {
   try {
     const result = await client.request({
@@ -64,6 +64,8 @@ These are the available config options for making requests. Only the path is req
   // `responseType` indicates the type of data that the server will respond with
   // options are: 'json', 'text'
   responseType: 'json', // default
+
+  allowBigNumberInJSON: false, // default false
 }
 ```
 
