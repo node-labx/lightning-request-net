@@ -1,3 +1,4 @@
+const http = require('http');
 const jsonParse = require('zan-json-parse').default;
 const Connection = require('./connection');
 const httpParser = require('./http_parser');
@@ -31,6 +32,9 @@ class HttpRequestClient {
 
   async request(options) {
     const method = (options.method || 'GET').toUpperCase();
+    if (http.METHODS.indexOf(method) === -1) {
+      throw new Error(`method ${method} is not supported`);
+    }
     const path = options.path || '/';
     const headers = Object.assign({}, this.defaultHeaders, options.headers || {});
     const responseType = options.responseType || 'json';
