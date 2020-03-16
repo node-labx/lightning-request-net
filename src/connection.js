@@ -1,6 +1,5 @@
 const net = require('net');
-const Debug = require('debug');
-const debug = Debug('conn:');
+const debug = require('debug')('conn:');
 
 const defaultIdelTimeout = 3 * 60 * 1000 - 5 * 1000;
 
