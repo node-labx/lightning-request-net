@@ -65,50 +65,27 @@ class Connection {
         // Emitted when data is received.
         debug('socket event -> data');
         this.dataCount++;
+        this.data += chunk;
 
         if (this.dataCount === 1) {
           const contentLengthIndex = chunk.indexOf('Content-Length: ');
-          const transferEncodingIndex = chunk.indexOf('Transfer-Encoding: chunked');
+          this.chunked = contentLengthIndex === -1;
 
-          if (contentLengthIndex > -1) {
-            this.chunked = false;
-            this.data = chunk;
+          if (!this.chunked) {
             this.contentLength = parseInt(chunk.slice(contentLengthIndex + 16, contentLengthIndex + 26).toString());
-            const idx = chunk.indexOf('\r\n\r\n');
-            this.bodySize += Buffer.byteLength(chunk) - idx - 4;
-
-            if (this.bodySize >= this.contentLength) {
-              this.successCall(this.data);
-              this.release();
-            }
-          } else if (transferEncodingIndex > -1) {
-            this.chunked = true;
-            this.data = chunk.replace(/\r\n\r\n.*\r\n/, '\r\n\r\n');
-            const idx = this.data.indexOf('0\r\n\r\n');
-            if (idx > -1) {
-              this.data = this.data.slice(0, idx - 2);
-              this.successCall(this.data);
-              this.release();
-            }
+            const headerTailIndex = chunk.indexOf('\r\n\r\n');
+            this.bodySize += Buffer.byteLength(chunk) - headerTailIndex - 4;
           }
         } else {
-          if (this.chunked) {
-            const idx = chunk.indexOf('0\r\n\r\n');
-            if (idx > -1) {
-              this.data += chunk.slice(0, idx - 2);
-              this.successCall(this.data);
-              this.release();
-            } else {
-              this.data += chunk;
-            }
-          } else {
-            this.data += chunk;
+          if (!this.chunked) {
             this.bodySize += Buffer.byteLength(chunk);
-            if (this.bodySize >= this.contentLength) {
-              this.successCall(this.data);
-              this.release();
-            }
           }
+        }
+
+        const zeroIndex = chunk.indexOf('\r\n0\r\n');
+        if ((this.bodySize && this.bodySize >= this.contentLength) || zeroIndex > -1) {
+          this.successCall(this.data);
+          this.release();
         }
       })
       .on('timeout', () => {
