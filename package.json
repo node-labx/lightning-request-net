@@ -30,6 +30,7 @@
     "zan-json-parse": "1.0.2"
   },
   "devDependencies": {
+    "benchmark": "^2.1.4",
     "ava": "^3.5.0",
     "nyc": "^15.0.0"
   }
