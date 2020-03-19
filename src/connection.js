@@ -22,13 +22,10 @@ class Connection {
     this.socket = null;
     this.ready = false;
     this.writeCacheData = null;
-
     this.successCall = loop;
     this.failCall = loop;
-
     this.contentLength = 0;
     this.chunked = false;
-
     this.bodySize = 0;
     this.data = ''; // received data
     this.dataCount = 0; // received data count
