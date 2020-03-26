@@ -54,7 +54,7 @@ module.exports = {
       if (idx > -1) {
         responseBodyText = responseBodyText.slice(idx + 2);
       }
-      const idx2 = responseBodyText.indexOf('\r\n0');
+      const idx2 = responseBodyText.lastIndexOf('\r\n0');
       if (idx2 > -1) {
         responseBodyText = responseBodyText.slice(0, idx2);
       }

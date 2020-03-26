@@ -79,7 +79,7 @@ class Connection {
           }
         }
 
-        const zeroIndex = chunk.indexOf('\r\n0\r\n');
+        const zeroIndex = chunk.lastIndexOf('\r\n0');
         if ((this.bodySize && this.bodySize >= this.contentLength) || zeroIndex > -1) {
           this.successCall(this.data);
           this.release();
