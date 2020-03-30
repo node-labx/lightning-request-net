@@ -36,7 +36,7 @@ module.exports = {
     const idx2 = data.indexOf(CRLF_2);
     const responseLineText = data.slice(0, idx);
     const responseHeadersText = data.slice(idx + 2, idx2);
-    const responseBodyText = data.slice(idx2 + 4);
+    let responseBodyText = data.slice(idx2 + 4);
 
     // response line parse
     const responseLineMatch = RESPONSE_LINE_REG.exec(responseLineText);
@@ -49,6 +49,16 @@ module.exports = {
       const index = item.indexOf(': ');
       headers[item.slice(0, index)] = item.slice(index + 2);
     });
+    if (headers['Transfer-Encoding']) {
+      const idx = responseBodyText.indexOf(CRLF);
+      if (idx > -1) {
+        responseBodyText = responseBodyText.slice(idx + 2);
+      }
+      const idx2 = responseBodyText.lastIndexOf('\r\n0');
+      if (idx2 > -1) {
+        responseBodyText = responseBodyText.slice(0, idx2);
+      }
+    }
 
     return {
       statusCode,
