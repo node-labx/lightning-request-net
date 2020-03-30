@@ -61,17 +61,20 @@ class HttpRequestClient {
           if (flag) {
             return;
           }
-          let result = httpParser.decode(resp);
-          if (result.statusCode === 200 && responseType === 'json') {
-            try {
+          let result;
+          try {
+            result = httpParser.decode(resp);
+            if (result.statusCode === 200 && responseType === 'json') {
               if (options.allowBigNumberInJSON) {
                 result.data = jsonParse(result.data);
               } else {
                 result.data = JSON.parse(result.data);
               }
-            } catch (error) {
-              reject(error);
             }
+          } catch (error) {
+            console.log(error);
+            console.log(resp);
+            reject(error);
           }
           clearTimeout(handler);
           resolve(result);
