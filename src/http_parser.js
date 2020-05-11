@@ -3,7 +3,7 @@ const CRLF_2 = '\r\n\r\n';
 const RESPONSE_LINE_REG = /^HTTP\/(\d)\.(\d) (\d{3}) ?(.*)$/;
 
 module.exports = {
-  encode: function(options) {
+  encode: function (options) {
     options.headers = options.headers || {};
     const chunkedEncoding = options.headers['Transfer-Encoding'] === 'chunked';
     const body = options.data;
@@ -12,7 +12,7 @@ module.exports = {
       options.headers['Content-Length'] = bodyLength;
     }
     let data = `${options.method} ${options.path} HTTP/1.1${CRLF}`;
-    Object.keys(options.headers).forEach(key => {
+    Object.keys(options.headers).forEach((key) => {
       data += `${key}: ${options.headers[key]}${CRLF}`;
     });
     data += CRLF;
@@ -31,7 +31,7 @@ module.exports = {
     return data;
   },
 
-  decode: function(data) {
+  decode: function (data) {
     const idx = data.indexOf(CRLF);
     const idx2 = data.indexOf(CRLF_2);
     const responseLineText = data.slice(0, idx);
@@ -45,9 +45,14 @@ module.exports = {
 
     // response header parse
     let headers = {};
-    responseHeadersText.split(CRLF).forEach(item => {
+    responseHeadersText.split(CRLF).forEach((item) => {
       const index = item.indexOf(': ');
-      headers[item.slice(0, index)] = item.slice(index + 2);
+      const key = item.slice(0, index);
+      if (headers[key]) {
+        headers[key] = headers[key] + ', ' + item.slice(index + 2);
+      } else {
+        headers[key] = item.slice(index + 2);
+      }
     });
     if (headers['Transfer-Encoding']) {
       const idx = responseBodyText.indexOf(CRLF);
