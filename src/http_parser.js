@@ -47,7 +47,7 @@ module.exports = {
     let headers = {};
     responseHeadersText.split(CRLF).forEach((item) => {
       const index = item.indexOf(': ');
-      const key = item.slice(0, index);
+      const key = item.slice(0, index).toLowerCase();
       if (headers[key]) {
         headers[key] = headers[key] + ', ' + item.slice(index + 2);
       } else {
