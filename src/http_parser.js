@@ -54,7 +54,7 @@ module.exports = {
         headers[key] = item.slice(index + 2);
       }
     });
-    if (headers['Transfer-Encoding']) {
+    if (headers['transfer-encoding']) {
       const idx = responseBodyText.indexOf(CRLF);
       if (idx > -1) {
         responseBodyText = responseBodyText.slice(idx + 2);
